@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Schnitzeljagd</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#f3f7ee;--card:#fff;--ink:#1f3a33;--muted:#5d7468;--accent:#2f6b57;--sun:#f2c14e;--berry:#c2456b;--line:#d5e0d3;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13241f;--card:#1c332c;--ink:#eaf3ec;--muted:#9bb5a8;--accent:#6fcf9f;--line:#2f4a41}}
+:root[data-theme="dark"]{--bg:#13241f;--card:#1c332c;--ink:#eaf3ec;--muted:#9bb5a8;--accent:#6fcf9f;--line:#2f4a41}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:500 18px/1.5 Nunito,system-ui,sans-serif}
+main{max-width:520px;margin:0 auto;padding:20px 16px 40px}
+h1,h2{font-family:Fredoka,system-ui,sans-serif;font-weight:600;line-height:1.2;margin:0 0 12px}
+h1{font-size:2rem}
+.badge{display:inline-block;background:var(--sun);color:#3a2b00;border-radius:999px;padding:4px 14px;font-family:Fredoka,sans-serif;font-weight:600;margin-bottom:12px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:18px;margin:14px 0}
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;cursor:pointer}
+.opt:focus-visible,.btn:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.opt b{flex:none;width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:Fredoka,sans-serif}
+.opt.picked{border-color:var(--accent)}
+.btn{display:inline-block;font:inherit;font-weight:700;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:10px 16px;margin:4px 6px 4px 0;cursor:pointer;text-decoration:none}
+.btn.alt{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.good{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--card))}
+.bad{border-color:var(--berry)}
+.hint{font-family:Fredoka,sans-serif;font-size:1.3rem}
+input{font:inherit;width:100%;padding:10px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.qr{text-align:center;break-inside:avoid;border:2px dashed var(--line);border-radius:14px;padding:14px}
+.qr div.code{display:inline-block;background:#fff;padding:8px}
+.qr h2{margin-bottom:8px}
+.muted{color:var(--muted);font-size:.9rem}
+@media (max-width:480px){.grid{grid-template-columns:1fr}}
+@media print{.noprint{display:none}html,body{background:#fff;color:#000}main{max-width:none}.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+// Hier später die echten Fragen und Hinweise eintragen. right = Index der richtigen Antwort (0=A ... 3=D)
+var Q=[
+{q:"Quizfrage 1: Platzhalter",a:["Antwort A","Antwort B","Antwort C","Antwort D"],right:0,hint:"Hinweis 1: Platzhalter"},
+{q:"Quizfrage 2: Platzhalter",a:["Antwort A","Antwort B","Antwort C","Antwort D"],right:0,hint:"Hinweis 2: Platzhalter"},
+{q:"Quizfrage 3: Platzhalter",a:["Antwort A","Antwort B","Antwort C","Antwort D"],right:0,hint:"Hinweis 3: Platzhalter"},
+{q:"Quizfrage 4: Platzhalter",a:["Antwort A","Antwort B","Antwort C","Antwort D"],right:0,hint:"Hinweis 4: Platzhalter"},
+{q:"Quizfrage 5: Platzhalter",a:["Antwort A","Antwort B","Antwort C","Antwort D"],right:0,hint:"Hinweis 5: Platzhalter"},
+{q:"Quizfrage 6: Platzhalter",a:["Antwort A","Antwort B","Antwort C","Antwort D"],right:0,hint:"Hinweis 6: Platzhalter"}
+];
+var L=["A","B","C","D"],app=document.getElementById("app"),P=new URLSearchParams(location.search);
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
+var mem={};
+function get(n){var v=store("sj"+n);return v!==null&&v!==undefined?v:(mem[n]===undefined?null:String(mem[n]))}
+function station(n){
+ var d=Q[n-1];
+ if(!d){app.innerHTML='<h1>Station nicht gefunden</h1><p>Bitte scanne den QR-Code noch einmal.</p>';return}
+ var done=get(n);
+ var h='<span class="badge">Station '+n+' von 6</span><h1>'+d.q+'</h1>';
+ if(done===null){
+  d.a.forEach(function(t,i){h+='<button class="opt" data-i="'+i+'"><b>'+L[i]+'</b><span>'+t+'</span></button>'});
+  h+='<p class="muted">Du hast nur einen Versuch. Überlegt gemeinsam!</p>';
+ }else{
+  var i=+done;
+  d.a.forEach(function(t,j){h+='<div class="opt'+(j===i?' picked':'')+'"><b>'+L[j]+'</b><span>'+t+'</span></div>'});
+  if(i===d.right)h+='<div class="card good"><h2>Richtig! 🎉</h2><p class="hint">'+d.hint+'</p></div>';
+  else h+='<div class="card bad"><h2>Leider falsch</h2><p>Hier gibt es keinen Hinweis. Weiter zur nächsten Station!</p></div>';
+ }
+ app.innerHTML=h;
+ app.querySelectorAll("button.opt").forEach(function(b){b.onclick=function(){var v=b.getAttribute("data-i");mem[n]=v;store("sj"+n,v);station(n)}});
+}
+function home(){
+ var h='<h1>Schnitzeljagd</h1><p>Diese Seite ist für dich als Organisator.</p><div class="card"><a class="btn" href="?print=1">QR-Codes drucken</a>';
+ h+='<p class="muted">Zum Testen:</p>';
+ for(var i=1;i<=6;i++)h+='<a class="btn alt" href="?s='+i+'">Station '+i+'</a>';
+ h+='<p><button class="btn alt" id="reset">Testantworten zurücksetzen</button></p></div>';
+ app.innerHTML=h;
+ document.getElementById("reset").onclick=function(){mem={};for(var i=1;i<=6;i++)store("sj"+i,null);alert("Zurückgesetzt.")};
+}
+function printPage(){
+ var base=location.href.split("?")[0].split("#")[0];
+ app.innerHTML='<div class="noprint"><h1>QR-Codes</h1><div class="card"><label for="u">Link der Seite (falls der QR-Code nicht passt, hier den echten Link einfügen)</label><input id="u" value="'+base+'"><p><button class="btn" id="go">QR-Codes neu erstellen</button><button class="btn alt" onclick="window.print()">Drucken</button> <a class="btn alt" href="'+base+'">Zurück</a></p></div></div><div class="grid" id="g"></div>';
+ function make(){
+  var u=document.getElementById("u").value.split("?")[0],g=document.getElementById("g");g.innerHTML="";
+  for(var n=1;n<=6;n++){
+   var c=document.createElement("div");c.className="qr";c.innerHTML='<h2>Station '+n+'</h2><div class="code"></div><p class="muted">Scannen und Quizfrage lösen</p>';g.appendChild(c);
+   try{new QRCode(c.querySelector(".code"),{text:u+"?s="+n,width:180,height:180,correctLevel:QRCode.CorrectLevel.M})}catch(e){c.querySelector(".code").textContent="QR-Code konnte nicht erstellt werden."}
+  }
+ }
+ document.getElementById("go").onclick=make;make();
+}
+if(P.get("s"))station(parseInt(P.get("s"),10));else if(P.get("print"))printPage();else home();
+</script>
+</body>
+</html>
