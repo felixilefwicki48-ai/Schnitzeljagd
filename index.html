@@ -42,12 +42,12 @@ input{font:inherit;width:100%;padding:10px;border-radius:10px;border:2px solid v
 <script>
 // Hier später die echten Fragen und Hinweise eintragen. right = Index der richtigen Antwort (0=A ... 3=D)
 var Q=[
-{q:"Von welchem Instrument wird in „Peter und der Wolf“ die Katze dargestellt?",a:["Fagott","Oboe","Violine","Klarinette"],right:3,hint:"Hinweis 1: Katzen, Ziegen, Hasen – aber Achtung: Videoüberwachung.<br><b>Erste Koordinate: 5</b>"},
-{q:"Welche Planeten sind von der Sonne aus gesehen der zweite, fünfte und achte?",a:["Merkur – Erde – Saturn","Venus – Jupiter – Neptun","Merkur – Mars – Neptun","Venus – Mars – Uranus"],right:1,hint:"Hinweis 2: Kleine Meise auf Laterne.<br><b>Zweite Koordinate: 3</b>"},
-{q:"Welcher ist der größte Ozean der Erde?",a:["Pazifischer Ozean","Atlantischer Ozean","Indischer Ozean","Arktischer Ozean"],right:0,hint:"Hinweis 3: Im Sommer nass, im Winter hart.<br><b>Dritte Koordinate: 2</b>"},
-{q:"Wie viele Zähne hat ein Hecht ungefähr?",a:["36","80","102","600"],right:3,hint:"Hinweis 4: Eichhörnchen lieben diesen Ort.<br><b>Vierte Koordinate: 8</b>"},
-{q:"Aus wie vielen Ringen besteht das olympische Symbol?",a:["2","4","5","7"],right:2,hint:"Hinweis 5: Berlin – Schröder – Ross.<br><b>Fünfte Koordinate: 1</b>"},
-{q:"Wie viele Halswirbel hat eine Giraffe?",a:["Weniger als ein Mensch","Genauso viele wie ein Mensch","Mehr als ein Mensch","Keine"],right:1,hint:"Hinweis 6: Fliegenpilz und Birkenstumpf.<br><b>Sechste Koordinate: 3</b>"}
+{q:"Von welchem Instrument wird in „Peter und der Wolf“ die Katze dargestellt?",a:["Fagott","Oboe","Violine","Klarinette"],right:3,hint:"Hinweis 1: Kleine Meise auf Laterne.<br><b>Erste Koordinate: 5</b>"},
+{q:"Welche Planeten sind von der Sonne aus gesehen der zweite, fünfte und achte?",a:["Merkur – Erde – Saturn","Venus – Jupiter – Neptun","Merkur – Mars – Neptun","Venus – Mars – Uranus"],right:1,hint:"Hinweis 2: Im Sommer nass, im Winter hart.<br><b>Zweite Koordinate: 3</b>"},
+{q:"Welcher ist der größte Ozean der Erde?",a:["Pazifischer Ozean","Atlantischer Ozean","Indischer Ozean","Arktischer Ozean"],right:0,hint:"Hinweis 3: Eichhörnchen lieben diesen Ort.<br><b>Dritte Koordinate: 2</b>"},
+{q:"Wie viele Zähne hat ein Hecht ungefähr?",a:["36","80","102","600"],right:3,hint:"Hinweis 4: Berlin – Schröder – Ross.<br><b>Vierte Koordinate: 8</b>"},
+{q:"Aus wie vielen Ringen besteht das olympische Symbol?",a:["2","4","5","7"],right:2,hint:"Hinweis 5: Fliegenpilz und Birkenstumpf.<br><b>Fünfte Koordinate: 1</b>"},
+{q:"Wie viele Halswirbel hat eine Giraffe?",a:["Weniger als ein Mensch","Genauso viele wie ein Mensch","Mehr als ein Mensch","Keine"],right:1,hint:"Super gemacht!<br><b>Hier ist die sechste und letzte Koordinate: 3</b>"}
 ];
 var L=["A","B","C","D"],app=document.getElementById("app"),P=new URLSearchParams(location.search);
 function store(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
